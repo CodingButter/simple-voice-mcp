@@ -27,11 +27,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/codingbutter/simple-voice-mcp.git"
+    "url": "git+https://github.com/CodingButter/simple-voice-mcp.git"
   },
-  "homepage": "https://github.com/codingbutter/simple-voice-mcp#readme",
+  "homepage": "https://github.com/CodingButter/simple-voice-mcp#readme",
   "bugs": {
-    "url": "https://github.com/codingbutter/simple-voice-mcp/issues"
+    "url": "https://github.com/CodingButter/simple-voice-mcp/issues"
   },
   "files": [
     "src",
