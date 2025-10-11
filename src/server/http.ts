@@ -16,64 +16,61 @@ const isInstalled = __dirname.includes("node_modules");
 export function startHTTPServer(wsManager: WebSocketManager) {
   const port = parseInt(process.env.MCP_HTTP_PORT || "3000");
 
-  // Serve pre-built dist files (works for both installed and local builds)
-  const distPath = isInstalled
-    ? join(__dirname, "..", "..", "dist", "index.html")  // From node_modules/voice-mcp/src/server
-    : join(__dirname, "..", "..", "dist", "index.html"); // From local src/server
+  // Get dist directory path
+  const distDir = isInstalled
+    ? join(__dirname, "..", "..", "dist")  // From node_modules/voice-mcp/src/server
+    : join(__dirname, "..", "..", "dist"); // From local src/server
 
-  const indexFile = file(distPath);
-  console.error(`[HTTP] Serving from dist: ${distPath}`);
+  console.error(`[HTTP] Serving from dist: ${distDir}`);
 
   const server = serve({
     port,
-    routes: {
-      // Serve React app
-      "/*": indexFile,
 
-      // WebSocket endpoint
-      "/ws": {
-        async GET(req) {
-          // TODO: Extract clientId from query params
-          const url = new URL(req.url);
-          const clientId = url.searchParams.get("clientId") || crypto.randomUUID();
+    async fetch(req) {
+      const url = new URL(req.url);
+      const { pathname } = url;
 
-          // Upgrade to WebSocket
-          const success = server.upgrade(req, {
-            data: { clientId },
-          });
-
-          if (!success) {
-            return new Response("WebSocket upgrade failed", { status: 400 });
-          }
-
-          return undefined; // Connection upgraded
-        },
-      },
+      // WebSocket upgrade
+      if (pathname === "/ws") {
+        const clientId = url.searchParams.get("clientId") || crypto.randomUUID();
+        const success = server.upgrade(req, {
+          data: { clientId },
+        });
+        if (!success) {
+          return new Response("WebSocket upgrade failed", { status: 400 });
+        }
+        return undefined;
+      }
 
       // API endpoint: receive text input from client
-      "/api/listen": {
-        async POST(req) {
-          try {
-            const body = (await req.json()) as { text: string };
-
-            if (!body.text) {
-              return Response.json({ error: "Missing text" }, { status: 400 });
-            }
-
-            // TODO: Push text into listen queue
-            const success = pushClientInput(body.text);
-
-            if (success) {
-              return Response.json({ ok: true });
-            } else {
-              return Response.json({ error: "No pending listen() call" }, { status: 400 });
-            }
-          } catch (error) {
-            console.error("[API] Error in /api/listen:", error);
-            return Response.json({ error: String(error) }, { status: 500 });
+      if (pathname === "/api/listen" && req.method === "POST") {
+        try {
+          const body = (await req.json()) as { text: string };
+          if (!body.text) {
+            return Response.json({ error: "Missing text" }, { status: 400 });
           }
-        },
-      },
+          const success = pushClientInput(body.text);
+          if (success) {
+            return Response.json({ ok: true });
+          } else {
+            return Response.json({ error: "No pending listen() call" }, { status: 400 });
+          }
+        } catch (error) {
+          console.error("[API] Error in /api/listen:", error);
+          return Response.json({ error: String(error) }, { status: 500 });
+        }
+      }
+
+      // Serve static files from dist
+      const filePath = pathname === "/" ? join(distDir, "index.html") : join(distDir, pathname);
+      const distFile = file(filePath);
+
+      if (await distFile.exists()) {
+        return new Response(distFile);
+      }
+
+      // Fallback to index.html for SPA routing
+      return new Response(file(join(distDir, "index.html")));
     },
 
     // WebSocket handlers
