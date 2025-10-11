@@ -1,0 +1,23 @@
+# Development files
+.env
+.env.example
+.mcp.json
+node_modules/
+bun.lockb
+
+# Build artifacts
+*.log
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Documentation (included via files field)
+# Only exclude extra docs not in package.json files array

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "voice-mcp": {
+      "command": "bun",
+      "args": ["run", "/absolute/path/to/simple-voice-mcp/src/index.tsx"],
+      "env": {
+        "ELEVENLABS_API_KEY": "your_api_key_here",
+        "MCP_HTTP_PORT": "53245",
+        "ELEVEN_VOICE_ID": "21m00Tcm4TlvDq8ikWAM",
+        "ELEVEN_MODEL_ID": "eleven_flash_v2_5"
+      }
+    }
+  }
+}

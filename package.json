@@ -1,0 +1,69 @@
+{
+  "name": "voice-mcp",
+  "version": "1.0.0",
+  "description": "Voice MCP Server - Add voice interaction capabilities (speak, listen, action) to LLMs through MCP with ElevenLabs TTS and React UI",
+  "type": "module",
+  "main": "src/index.tsx",
+  "bin": {
+    "voice-mcp": "src/index.tsx"
+  },
+  "scripts": {
+    "dev": "bun --hot src/index.tsx",
+    "start": "NODE_ENV=production bun src/index.tsx",
+    "build": "bun run build.ts"
+  },
+  "keywords": [
+    "mcp",
+    "voice",
+    "tts",
+    "elevenlabs",
+    "speech",
+    "model-context-protocol",
+    "llm",
+    "ai",
+    "assistant"
+  ],
+  "author": "codingbutter",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codingbutter/simple-voice-mcp.git"
+  },
+  "homepage": "https://github.com/codingbutter/simple-voice-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/codingbutter/simple-voice-mcp/issues"
+  },
+  "files": [
+    "src",
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CLAUDE.md",
+    "Project_Scope.md",
+    "QUICKSTART.md"
+  ],
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.0",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-select": "^2.2.5",
+    "@radix-ui/react-slot": "^1.2.3",
+    "bun-plugin-tailwind": "^0.0.15",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "elevenlabs": "^1.59.0",
+    "lucide-react": "^0.525.0",
+    "react": "^19",
+    "react-dom": "^19",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.11",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/bun": "latest"
+  }
+}
