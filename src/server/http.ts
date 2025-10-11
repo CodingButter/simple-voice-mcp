@@ -13,23 +13,16 @@ import { pushClientInput } from "../mcp/tools.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const isInstalled = __dirname.includes("node_modules");
 
-export async function startHTTPServer(wsManager: WebSocketManager) {
+export function startHTTPServer(wsManager: WebSocketManager) {
   const port = parseInt(process.env.MCP_HTTP_PORT || "3000");
 
-  // Use dist files if installed, otherwise use HTML import
-  let indexFile: any;
-  if (isInstalled) {
-    // Running from installed npm package - serve from dist
-    // From node_modules/voice-mcp/src/server -> go up 2 levels to package root
-    const distPath = join(__dirname, "..", "..", "dist", "index.html");
-    indexFile = file(distPath);
-    console.error(`[HTTP] Serving from dist: ${distPath}`);
-  } else {
-    // Running from source - use Bun's HTML import
-    const htmlImport = await import("../index.html");
-    indexFile = htmlImport.default;
-    console.error("[HTTP] Serving from src (development mode)");
-  }
+  // Serve pre-built dist files (works for both installed and local builds)
+  const distPath = isInstalled
+    ? join(__dirname, "..", "..", "dist", "index.html")  // From node_modules/voice-mcp/src/server
+    : join(__dirname, "..", "..", "dist", "index.html"); // From local src/server
+
+  const indexFile = file(distPath);
+  console.error(`[HTTP] Serving from dist: ${distPath}`);
 
   const server = serve({
     port,
