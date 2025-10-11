@@ -20,7 +20,8 @@ export async function startHTTPServer(wsManager: WebSocketManager) {
   let indexFile: any;
   if (isInstalled) {
     // Running from installed npm package - serve from dist
-    const distPath = join(__dirname, "..", "dist", "index.html");
+    // From node_modules/voice-mcp/src/server -> go up 2 levels to package root
+    const distPath = join(__dirname, "..", "..", "dist", "index.html");
     indexFile = file(distPath);
     console.error(`[HTTP] Serving from dist: ${distPath}`);
   } else {
