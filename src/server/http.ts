@@ -11,7 +11,7 @@ import { pushClientInput } from "../mcp/tools.js";
 
 // Determine if we're running from source or installed package
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const isInstalled = !__dirname.includes("/src/");
+const isInstalled = __dirname.includes("node_modules");
 
 export async function startHTTPServer(wsManager: WebSocketManager) {
   const port = parseInt(process.env.MCP_HTTP_PORT || "3000");
@@ -20,7 +20,7 @@ export async function startHTTPServer(wsManager: WebSocketManager) {
   let indexFile: any;
   if (isInstalled) {
     // Running from installed npm package - serve from dist
-    const distPath = join(__dirname, "..", "..", "dist", "index.html");
+    const distPath = join(__dirname, "..", "dist", "index.html");
     indexFile = file(distPath);
     console.error(`[HTTP] Serving from dist: ${distPath}`);
   } else {

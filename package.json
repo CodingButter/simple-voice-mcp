@@ -1,6 +1,6 @@
 {
   "name": "voice-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Voice MCP Server - Add voice interaction capabilities (speak, listen, action) to LLMs through MCP with ElevenLabs TTS and React UI",
   "type": "module",
   "main": "src/index.tsx",
@@ -10,7 +10,8 @@
   "scripts": {
     "dev": "bun --hot src/index.tsx",
     "start": "NODE_ENV=production bun src/index.tsx",
-    "build": "bun run build.ts"
+    "build": "bun run build.ts",
+    "prepublishOnly": "bun run build"
   },
   "keywords": [
     "mcp",
