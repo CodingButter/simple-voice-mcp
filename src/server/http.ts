@@ -62,15 +62,31 @@ export function startHTTPServer(wsManager: WebSocketManager) {
       }
 
       // Serve static files from dist
-      const filePath = pathname === "/" ? join(distDir, "index.html") : join(distDir, pathname);
+      // Strip leading slash from pathname to avoid path.join treating it as absolute
+      const cleanPath = pathname === "/" ? "index.html" : pathname.slice(1);
+      const filePath = join(distDir, cleanPath);
       const distFile = file(filePath);
 
       if (await distFile.exists()) {
-        return new Response(distFile);
+        // Determine content type based on file extension
+        const ext = cleanPath.split('.').pop()?.toLowerCase();
+        const contentType = ext === 'js' ? 'application/javascript' :
+                          ext === 'css' ? 'text/css' :
+                          ext === 'html' ? 'text/html' :
+                          ext === 'svg' ? 'image/svg+xml' :
+                          ext === 'json' ? 'application/json' :
+                          ext === 'map' ? 'application/json' :
+                          'application/octet-stream';
+
+        return new Response(distFile, {
+          headers: { 'Content-Type': contentType }
+        });
       }
 
       // Fallback to index.html for SPA routing
-      return new Response(file(join(distDir, "index.html")));
+      return new Response(file(join(distDir, "index.html")), {
+        headers: { 'Content-Type': 'text/html' }
+      });
     },
 
     // WebSocket handlers
