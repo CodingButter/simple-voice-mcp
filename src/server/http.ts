@@ -3,19 +3,38 @@
  * Serves the React UI and handles WebSocket connections for audio streaming
  */
 
-import { serve, type ServerWebSocket } from "bun";
-import index from "../index.html";
+import { serve, type ServerWebSocket, file } from "bun";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import { WebSocketManager } from "./websocket.js";
 import { pushClientInput } from "../mcp/tools.js";
 
-export function startHTTPServer(wsManager: WebSocketManager) {
+// Determine if we're running from source or installed package
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const isInstalled = !__dirname.includes("/src/");
+
+export async function startHTTPServer(wsManager: WebSocketManager) {
   const port = parseInt(process.env.MCP_HTTP_PORT || "3000");
+
+  // Use dist files if installed, otherwise use HTML import
+  let indexFile: any;
+  if (isInstalled) {
+    // Running from installed npm package - serve from dist
+    const distPath = join(__dirname, "..", "..", "dist", "index.html");
+    indexFile = file(distPath);
+    console.error(`[HTTP] Serving from dist: ${distPath}`);
+  } else {
+    // Running from source - use Bun's HTML import
+    const htmlImport = await import("../index.html");
+    indexFile = htmlImport.default;
+    console.error("[HTTP] Serving from src (development mode)");
+  }
 
   const server = serve({
     port,
     routes: {
       // Serve React app
-      "/*": index,
+      "/*": indexFile,
 
       // WebSocket endpoint
       "/ws": {

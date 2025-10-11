@@ -26,7 +26,7 @@ const wsManager = new WebSocketManager();
 const ttsManager = new TTSManager(wsManager, ELEVENLABS_API_KEY);
 
 // TODO: Start HTTP/WebSocket server
-const httpServer = startHTTPServer(wsManager);
+const httpServer = await startHTTPServer(wsManager);
 
 // TODO: Create and start MCP server
 const mcpServer = new Server(

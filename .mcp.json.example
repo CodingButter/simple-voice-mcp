@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "voice-mcp": {
+      "command": "npx",
+      "args": ["-y", "voice-mcp"],
+      "env": {
+        "ELEVENLABS_API_KEY": "your_elevenlabs_api_key_here",
+        "MCP_HTTP_PORT": "53245",
+        "ELEVEN_VOICE_ID": "EXAVITQu4vr4xnSDxMaL",
+        "ELEVEN_MODEL_ID": "eleven_flash_v2_5"
+      }
+    }
+  }
+}
