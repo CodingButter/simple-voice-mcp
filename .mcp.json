@@ -7,7 +7,7 @@
       "command": "bun",
       "args": ["run", "src/index.tsx"],
       "env": {
-        "ELEVENLABS_API_KEY": "sk_9d262b4ef8c9773d64201e2c9ec82dc9c5453456808af0dc",
+        "ELEVENLABS_API_KEY": "${ELEVENLABS_API_KEY}",
         "MCP_HTTP_PORT": "53245",
         "ELEVEN_VOICE_ID": "tAblEwhJ8ycHNukBlZMA",
         "ELEVEN_MODEL_ID": "eleven_flash_v2_5",
